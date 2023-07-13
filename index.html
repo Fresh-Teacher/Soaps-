@@ -142,14 +142,46 @@ hs.src = ('//s10.histats.com/js15_as.js');
                 <div class="col mb-3">
                     <div class="card">
                         <div class="card-header text-light bg-primary pb-1">
-                            <h5>Notifications</h5>
+                            <h5>IMPORTANT NOTICE ⚠️</h5>
                         </div>
                         <div class="card-body">
-                            <p>Soap2day is free all the time, but there are few ads on video player page.</p>
-                            <p><strong>But Don't worry! We are working hard to update all Movies &amp; Series Premium video player ( For Free ).</strong></p>
-                            <p>Thank you for your patience,</p>
-                            <p>Soap2day Team.</p>
+                            <p>We would like to inform you that the soaps and videos available on this website are provided to you completely free of charge.</p>
+                            <div id="content" class="collapsed">
+                                <p><strong>In order to sustain this free service, we rely on advertisements displayed on the site. We understand that ads can be bothersome at times, but they help support the availability of free content for everyone. We are working on introducing a Premium video player that will offer an ad-free experience. However, please note that there will be a cost associated with watching videos through the Premium player. Thank you for your understanding and continued support.</strong></p>
+                                <div id="additional-content" style="display: none;">
+                                    <p>We would like to bring to your attention an aspect of our website that may cause temporary inconvenience while navigating and accessing the desired content.</p>
+                                    <p>When you click on a movie, you may encounter an advertisement that appears in a new window or tab. We understand that these ads can be disruptive and unrelated to the content you are seeking.</p>
+                                    <p>Please be assured that these ads are external and not directly related to our website's content. To continue watching the movie without interruption, simply close the ad page and return to the original page. We apologize for any inconvenience caused by these ads, as we understand that repeated redirects can be frustrating.</p>
+                                    <p>We assure you that your persistence will be rewarded, as once you return to the page, you will be able to play the movie and enjoy the content you intended to watch.</p>
+                                    <p>Thank you for your patience and understanding as we work towards providing a seamless and enjoyable experience for all our users.</p>
+                                </div>
+                            </div>
+                            <div id="show-more-less">
+                                <button id="show-more-btn">Show more...</button>
+                                <button id="show-less-btn" style="display: none;">Show less</button>
+                            </div>
                         </div>
+                        
+                        <script>
+                            const contentElement = document.getElementById('content');
+                            const additionalContentElement = document.getElementById('additional-content');
+                            const showMoreBtn = document.getElementById('show-more-btn');
+                            const showLessBtn = document.getElementById('show-less-btn');
+                        
+                            showMoreBtn.addEventListener('click', function () {
+                                additionalContentElement.style.display = 'block';
+                                contentElement.classList.remove('collapsed');
+                                showMoreBtn.style.display = 'none';
+                                showLessBtn.style.display = 'inline-block';
+                            });
+                        
+                            showLessBtn.addEventListener('click', function () {
+                                additionalContentElement.style.display = 'none';
+                                contentElement.classList.add('collapsed');
+                                showMoreBtn.style.display = 'inline-block';
+                                showLessBtn.style.display = 'none';
+                            });
+                        </script>
                     </div>
                 </div>
                                 <div class="col mb-3">
