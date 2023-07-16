@@ -1,306 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <!-- Head section code here -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <title>Bootstrap Template</title>
+    <!-- Meta viewport tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <style>
+        /* Add any custom styles here */
+        .iframe-container {
+            /* Add your styles */
+        }
+
+        .video-wrapper {
+            /* Add your styles */
+        }
+
+        .iframe-video {
+            /* Add your styles */
+        }
+    </style>
 </head>
+
 <body>
-  <!-- Navbar code here -->
-
-  <section id="search" class="mt-3">
     <div class="container">
-      <div class="row">
-        <div class="col-md-8">
-          <div class="row row-cols-1">
-            <div class="col mb-3">
-              <div class="card">
-                <div class="card-body pb-1">
-                  <!-- Search bar -->
-                  <div class="row">
-                    <div class="col-12">
-                      <form id="searchForm" class="search-bar mb-2 mb-lg-0 row" onsubmit="submitForm(event)" style="display: inline;">
-                        <div class="col-12">
-                          <div class="input-group">
-                            <input id="searchInput" class="form-control" type="search" autocomplete="on"
-                              placeholder="Find Movies, TVs, Directors, Actors" name="search" aria-label="search"
-                              required/>
-                            <button class="btn btn-primary" type="submit">Search</button>
-                          </div>
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6 my-3">
+                <div class="iframe-container mb-2 bg-dark">
+                    <div id="loadingVideo">
+                        <div class="spinner-border text-light" role="status">
+                            <span class="visually-hidden">Loading...</span>
                         </div>
-                      </form>
+                        <p>Click the Play Movie button to start watching...</p>
                     </div>
-                  </div>
-                  <!-- End of search bar -->
-
-                  <!-- Search results data will be dynamically inserted here -->
-                  <div class="row row-cols-1" id="moviesContainer">
-                  </div>
+                    <div class="video-wrapper">
+                        <iframe class="iframe-video" id="videoIframe"
+                            src="https://embedz.click/player/61ttclp3qwpvd27" gesture="media"
+                            allow="encrypted-media" allowfullscreen></iframe>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button id="playButton" class="btn btn-primary" onclick="playInNewWindow()">Play Movie ▶️</button>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </section>
 
-  <!-- Pagination -->
-  <div class="container">
-    <ul class="pagination" id="paginationContainer"></ul>
-  </div>
-
-  <!-- Footer code here -->
-
-  <script src="/assets/js/jquery.min.js"></script>
-  <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.min.js"></script>
-  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazy/1.7.9/jquery.lazy.plugins.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="/assets/js/custom.js"></script>
-  <script>
-    // Add the missing JavaScript code here
-    $(document).ready(function () {
-  const itemsPerPage = 18; // Number of items to display per page
-  const moviesContainer = document.querySelector('#moviesContainer');
-  const paginationContainer = document.querySelector('#paginationContainer');
-  let moviesData = []; // Variable to store the movies data
-
-  // Function to fetch movies data from movies.json
-  function fetchMoviesData() {
-    return fetch('/movies.json')
-      .then(response => response.json())
-      .then(data => {
-        return data;
-      })
-      .catch(error => {
-        console.log('Error fetching movies:', error);
-        return [];
-      });
-  }
-
-  // Function to render movies data
-  function renderMoviesData(data) {
-    // Calculate the total number of pages
-    const totalPages = Math.ceil(data.length / itemsPerPage);
-
-    // Render the initial page
-    renderPage(1, data);
-
-    // Render pagination links
-    renderPagination(totalPages);
-
-    // Display "No results found" message if there are no movies
-    if (data.length === 0) {
-      displayNoResultsMessage();
-    } else {
-      hideNoResultsMessage();
-    }
-  }
-
-  // Function to display "No results found" message
-  function displayNoResultsMessage() {
-    const noResultsMessage = document.createElement('p');
-    noResultsMessage.textContent = 'No results found! Please write the correct movie title, year of release, or name of the movie character. ';
-    noResultsMessage.className = 'no-results-message';
-
-    
-
-    // Create the return to homepage link
-    const homepageLink = document.createElement('a');
-    homepageLink.textContent = 'Return to homepage';
-    homepageLink.href = 'https://soaps.vercel.app/watch.html'; // Replace with the desired homepage URL
-    homepageLink.classList.add('btn', 'btn-primary');
-
-    // Append the message text and homepage link to the container
-    noResultsMessage.appendChild(homepageLink);
-
-    // Append the message container to the movies container
-    moviesContainer.appendChild(noResultsMessage);
-  }
-
-  // Function to hide "No results found" message
-  function hideNoResultsMessage() {
-    const noResultsMessage = document.querySelector('.no-results-message');
-
-    if (noResultsMessage) {
-      moviesContainer.removeChild(noResultsMessage);
-    }
-  }
-
-
-  // Function to render a specific page
-  function renderPage(page, data) {
-    // Clear the movies container
-    moviesContainer.innerHTML = '';
-
-    // Calculate the starting and ending index for the current page
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = Math.min(startIndex + itemsPerPage, data.length);
-
-    // Loop through each movie object in the data
-    for (let i = startIndex; i < endIndex; i++) {
-      const movie = data[i];
-
-      // Create a card div for each movie
-      const cardDiv = document.createElement('div');
-      cardDiv.className = 'card mb-3';
-
-      // Create the card body
-      const cardBody = document.createElement('div');
-      cardBody.className = 'card-body';
-
-      // Create the movie title as a clickable element
-      const titleLink = document.createElement('a');
-      titleLink.textContent = movie.title;
-      titleLink.className = 'movie-title';
-      titleLink.href = '#';
-
-      // Create the movie thumbnail
-      const thumbnailImg = document.createElement('img');
-      thumbnailImg.src = movie.thumbnail;
-      thumbnailImg.alt = movie.title;
-      thumbnailImg.className = 'movie-thumbnail';
-
-      // Append the title and thumbnail to the card body
-      cardBody.appendChild(titleLink);
-      cardBody.appendChild(thumbnailImg);
-
-      // Append the card body to the card div
-      cardDiv.appendChild(cardBody);
-
-      // Append the card div to the movies container
-      moviesContainer.appendChild(cardDiv);
-
-      // Event listener to expand/collapse the movie details
-      titleLink.addEventListener('click', () => {
-        const detailsDiv = createMovieDetails(movie);
-        toggleMovieDetails(cardDiv, detailsDiv);
-      });
-
-      thumbnailImg.addEventListener('click', () => {
-        const detailsDiv = createMovieDetails(movie);
-        toggleMovieDetails(cardDiv, detailsDiv);
-      });
-    }
-  }
-
-  // Function to render pagination links
-  function renderPagination(totalPages) {
-    // Clear the pagination container
-    paginationContainer.innerHTML = '';
-
-    // Loop through each page
-    for (let page = 1; page <= totalPages; page++) {
-      // Create a pagination item
-      const paginationItem = document.createElement('li');
-      paginationItem.className = 'page-item';
-      paginationItem.innerHTML = `<a class="page-link" href="#">${page}</a>`;
-
-      // Add an event listener to handle page click
-      paginationItem.addEventListener('click', () => {
-        renderPage(page, moviesData);
-      });
-
-      // Append the pagination item to the pagination container
-      paginationContainer.appendChild(paginationItem);
-    }
-  }
-
-  // Function to create the movie details element
-  function createMovieDetails(movie) {
-    const detailsDiv = document.createElement('div');
-    detailsDiv.className = 'movie-details';
-
-    // Create the movie overview
-    const overviewParagraph = document.createElement('p');
-    overviewParagraph.textContent = movie.overview;
-
-    // Create the movie cast
-    const castParagraph = document.createElement('p');
-    castParagraph.innerHTML = `<strong>Cast:</strong> ${movie.cast.join(', ')}`;
-
-    // Create the movie genres
-    const genresParagraph = document.createElement('p');
-    genresParagraph.innerHTML = `<strong>Genres:</strong> ${movie.genres.join(', ')}`;
-
-    // Create the movie year
-    const yearParagraph = document.createElement('p');
-    yearParagraph.innerHTML = `<strong>Year:</strong> ${movie.year}`;
-
-    // Create the "Watch Movie" button
-    const watchButton = document.createElement('button');
-    watchButton.textContent = 'Watch Movie';
-    watchButton.className = 'btn btn-primary';
-    watchButton.addEventListener('click', () => {
-      const videoElement = createMovieVideo(movie.href);
-      detailsDiv.appendChild(videoElement);
-    });
-
-    // Append the movie details to the details div
-    detailsDiv.appendChild(overviewParagraph);
-    detailsDiv.appendChild(castParagraph);
-    detailsDiv.appendChild(genresParagraph);
-    detailsDiv.appendChild(yearParagraph);
-    detailsDiv.appendChild(watchButton);
-
-    return detailsDiv;
-  }
-
-  // Function to create the movie video element
-  function createMovieVideo(sourceUrl) {
-    const videoElement = document.createElement('video');
-    videoElement.src = sourceUrl;
-    videoElement.controls = true;
-    videoElement.autoplay = true;
-
-    return videoElement;
-  }
-
-  // Function to submit the search form
-  function submitForm(event) {
-    event.preventDefault();
-    const searchInput = document.getElementById('searchInput').value;
-    performSearch(searchInput);
-  }
-
-  // Function to perform search
-  function performSearch(searchTerm) {
-    // Filter the movies data based on the search term
-    const searchData = moviesData.filter(movie =>
-      movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      movie.cast.some(actor => actor.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      movie.genres.some(genre => genre.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      movie.year.toString().includes(searchTerm)
-    );
-
-    // Render the search results
-    renderMoviesData(searchData);
-  }
-
-  // Fetch movies data and render on page load
-  fetchMoviesData().then(data => {
-    moviesData = data;
-    renderMoviesData(moviesData);
-  });
-
-  // Add event listener to the search form
-  const searchForm = document.getElementById('searchForm');
-  searchForm.addEventListener('submit', submitForm);
-});
-
-// Add event listener to the search input
-const searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('input', handleSearchInput);
-
-// Function to handle search input
-function handleSearchInput() {
-  const searchValue = searchInput.value.trim();
-  if (searchValue === '') {
-    // Go back to the previous page
-    history.back();
-  }
-}
-
-  </script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function playInNewWindow() {
+            var videoUrl = document.getElementById("videoIframe").src;
+            window.open(videoUrl, "_blank");
+        }
+    </script>
 </body>
+
 </html>
