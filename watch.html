@@ -21,6 +21,11 @@
         .iframe-video {
             /* Add your styles */
         }
+
+        #loadingVideo {
+            background-color: #f8f9fa;
+            padding: 10px;
+        }
     </style>
 </head>
 
@@ -33,7 +38,7 @@
                         <div class="spinner-border text-light" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
-                        <p>Initialising...</p>
+                        <p>Player Loading...</p>
                     </div>
                     <div class="video-wrapper">
                         <iframe class="iframe-video" id="videoIframe"
@@ -41,7 +46,8 @@
                             allow="encrypted-media" allowfullscreen></iframe>
                     </div>
                     <div class="text-center mt-3">
-                        <button id="playButton" class="btn btn-primary" onclick="playInNewWindow()">Play Movie ▶️</button>
+                        <button id="playButton" class="btn btn-primary" onclick="playInNewWindow()">Watch Movie ▶️</button>
+                        <a id="downloadLink" class="btn btn-secondary">Download</a>
                     </div>
                 </div>
             </div>
@@ -55,6 +61,22 @@
             var videoUrl = document.getElementById("videoIframe").src;
             window.open(videoUrl, "_blank");
         }
+
+        function setDownloadLink() {
+            var videoUrl = document.getElementById("videoIframe").src;
+            var fileName = getFileNameFromUrl(videoUrl);
+            var downloadLink = document.getElementById("downloadLink");
+            downloadLink.href = videoUrl;
+            downloadLink.setAttribute("download", fileName);
+        }
+
+        function getFileNameFromUrl(url) {
+            var fileName = url.substring(url.lastIndexOf('/') + 1);
+            return fileName;
+        }
+
+        // Set the download link when the page is loaded
+        window.addEventListener("load", setDownloadLink);
     </script>
 </body>
 
